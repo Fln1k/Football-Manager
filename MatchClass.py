@@ -17,14 +17,11 @@ def Game(Team1,Team2):
         team1.append(Team1)
         team2.append(Statistic)
         team2.append(Team2)
-        counter=input("Enter smt to start game")
         print('\n'*100)
         time=0
         Action=False
         pointer=1
         team=1
-        goalfirst=0
-        goalsecond=0
         alltime=90
         addtime=0
         while time<=90:
@@ -38,7 +35,7 @@ def Game(Team1,Team2):
                                 print("Half Time")
                                 i=input()
                 print('{} minute'.format(time))
-                print('CHE {} - {} ARS'.format(goalfirst,goalsecond))
+                print('{} {} - {} {}'.format(team1[1].Name,team1[0].Goals,team2[0].Goals,team2[1].Name))
                 if team%2!=0:
                         activeteam=team1
                         notactiveteam=team2
@@ -56,7 +53,7 @@ def Game(Team1,Team2):
                 else:
                         if pointer<4:
                                 chance=random.randint(0,100)
-                                player=random.randint(2,11)
+                                player=random.randint(2,10)
                                 if chance<=activeteam[1].StartPlayers[player].Pass:
                                         print("Secsessful pass by")
                                         print("{} {}".format(activeteam[1].StartPlayers[player].Surname,activeteam[1].StartPlayers[player].Club))
@@ -79,12 +76,8 @@ def Game(Team1,Team2):
                                                          team1[0].Goals+=1
                                                  else:
                                                          team2[0].Goals+=1
-                                                 team+=1
                                                  Action=False
-                                                 if team%2==0:
-                                                         goalfirst+=1
-                                                 else:
-                                                        goalsecond+=1
+                                                 team += 1
                                         else:
                                                 team+=1
                                                 Action=False
@@ -104,10 +97,6 @@ def Game(Team1,Team2):
                                                 else:
                                                         team2[0].Goals+=1
                                                 Action=False
-                                                if team%2==0:
-                                                        goalfirst+=1
-                                                else:
-                                                        goalsecond+=1
                                                 team+=1
                                         else:
                                                 print("SSSSSSSAAAAAAAAVVVVVVVVVVEEEEEEEEEEE")
@@ -147,10 +136,6 @@ def Game(Team1,Team2):
                                                 else:
                                                         team2[0].Goals+=1
                                                 Action=False
-                                                if team%2==0:
-                                                        goalfirst+=1
-                                                else:
-                                                        goalsecond+=1
                                                 team+=1
                                         else:
                                                 print("SSSSSSSAAAAAAAAVVVVVVVVVVEEEEEEEEEEE")
