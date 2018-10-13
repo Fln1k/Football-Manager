@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from random import randint as rand
 from time import sleep
 
@@ -31,21 +30,28 @@ class MatchTeam:
         def addProssession(self):
                 self.Prossession+=1
 
+def Show(team1,team2):
+        print('{} {}\n{} Goals {}\n{} Total Shoots {}\n{} Shoots on Target {}\n{} Pass compleated {}\n{}% Proccesion {}%'.format(team1.Team.Name,team2.Team.Name,team1.Goals,team2.Goals,team1.AllShoots,team2.AllShoots,team1.SecsessfulShoots,team2.SecsessfulShoots,team1.SecsessfulPass,team2.SecsessfulPass,team1.Prossession,team2.Prossession))
+
 def Game(Team1,Team2):
-        time = 0
+        timer = 0
         MatchTeam1=MatchTeam(Team1)
         MatchTeam2=MatchTeam(Team2)
         activeteam=MatchTeam1
         notactiveteam=MatchTeam2
         changeteam=0
         action=False
+        additionaltime=90
         attackpointer=0
-        while time<=90:
+        while timer<=180:
+                time=int(timer/2)
                 activeteam.addProssession()
                 if activeteam.Team.Name==Team1.Name:
                         print('{} {} - {} {}     {} min'.format(activeteam.Team.Name,activeteam.Goals,notactiveteam.Goals,notactiveteam.Team.Name,time))
                 else:
                         print('{} {} - {} {}     {} min'.format(notactiveteam.Team.Name, notactiveteam.Goals,activeteam.Goals, activeteam.Team.Name, time))
+                if time == 45 or time == 90:
+                        additionaltime = rand(0, 5)
                 if attackpointer<4:
                         chance = rand(0,100)
                         activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders,10)]
@@ -76,6 +82,7 @@ def Game(Team1,Team2):
                                         activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders,10-activeteam.Team.Strikers)]
                                 else:
                                         activeplayer = activeteam.Team.StartPlayers[rand(10 - activeteam.Team.Strikers,10)]
+                                chance=rand(0,100)
                                 if chance<=activeplayer.Rating/2:
                                         activeteam.addShoot()
                                         print('Missing Shoot by {} {}'.format(activeplayer.Surname,activeplayer.Club))
@@ -88,10 +95,27 @@ def Game(Team1,Team2):
                                         attackpointer=0
 
                                 else:
-                                        activeteam.addShoot()
+                                        activeteam.addSecsessfilShoot()
                                         notactiveteam.addSave()
                                         print('SSSSSSSSAAAAAAAAVVVVVVEEEEEE by {} {}'.format(notactiveteam.Team.StartPlayers[0].Surname,notactiveteam.Team.StartPlayers[0].Club))
                                         activeteam, notactiveteam = notactiveteam, activeteam
                                         attackpointer=0
-                time+=1
-                sleep(1)
+                timer+=1
+                sleep(0)
+                if time==additionaltime+45 or time==additionaltime+90:
+                        timer-=additionaltime*2
+                        additionaltime=90
+                        if time==45:
+                                print('------HALF TIME------')
+                                sleep(5)
+                        timer+=1
+        activeteam.Prossession=int(activeteam.Prossession/(activeteam.Prossession+notactiveteam.Prossession)*100)
+        notactiveteam.Prossession=100-activeteam.Prossession
+        activeteam.AllPass*=2
+        activeteam.SecsessfulPass*=2
+        notactiveteam.AllPass*=2
+        notactiveteam.SecsessfulPass*=2
+        if activeteam.Team.Name==Team1.Name:
+                Show(activeteam,notactiveteam)
+        else:
+                Show(notactiveteam,activeteam)

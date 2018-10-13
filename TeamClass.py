@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 def findmin(amount):
     min = 101
     minindex=0

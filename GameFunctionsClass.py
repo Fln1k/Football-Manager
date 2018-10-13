@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from PlayerClass import Player
 from TeamClass import Team
 from LeagueClass import League
