@@ -31,6 +31,8 @@ class Player:
     _Hand=0
     _GkPos=0
     _Leg=0
+    RedCard=0
+    YellowCard=0
     def __init__(self,information):
         self.Name= information[0]
         self.Surname=information[1]

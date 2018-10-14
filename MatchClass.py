@@ -10,6 +10,8 @@ class MatchTeam:
         Save = 0
         Prossession = 0
         Goals = 0
+        YellowCards=0
+        RedCards=0
         def __init__(self,Team):
                 self.Team=Team
         def addGoal(self):
@@ -29,9 +31,20 @@ class MatchTeam:
                 self.Save+=1
         def addProssession(self):
                 self.Prossession+=1
+        def addYellow(self,player):
+                self.YellowCards+=1
+                self.Team.StartPlayers[player].YellowCard+=1
+                if self.Team.StartPlayers[player].YellowCard==2:
+                        print('ITS RED CARD!')
+                        self.addRed(player)
+        def addRed(self,player):
+                self.RedCards+=1
+                self.Team.StartPlayers[player].YellowCard=0
+                self.Team.StartPlayers[player].RedCard=1
 
 def Show(team1,team2):
-        print('{} {}\n{} Goals {}\n{} Total Shoots {}\n{} Shoots on Target {}\n{} Pass compleated {}\n{}% Proccesion {}%'.format(team1.Team.Name,team2.Team.Name,team1.Goals,team2.Goals,team1.AllShoots,team2.AllShoots,team1.SecsessfulShoots,team2.SecsessfulShoots,team1.SecsessfulPass,team2.SecsessfulPass,team1.Prossession,team2.Prossession))
+        print('{} {}\n{} Goals {}\n{} Total Shoots {}\n{} Shoots on Target {}\n{} Pass compleated {}\n{}% Proccesion {}%\n{} Yellow Cards {}\n{} Red Cards {}'.format(team1.Team.Name,team2.Team.Name,team1.Goals,team2.Goals,team1.AllShoots,team2.AllShoots,team1.SecsessfulShoots,team2.SecsessfulShoots,team1.SecsessfulPass,team2.SecsessfulPass,team1.Prossession,team2.Prossession,team1.YellowCards,team1.YellowCards,team1.RedCards,team2.RedCards))
+        print("------------")
 
 def Game(Team1,Team2):
         timer = 0
@@ -39,8 +52,6 @@ def Game(Team1,Team2):
         MatchTeam2=MatchTeam(Team2)
         activeteam=MatchTeam1
         notactiveteam=MatchTeam2
-        changeteam=0
-        action=False
         additionaltime=90
         attackpointer=0
         while timer<=180:
@@ -52,9 +63,25 @@ def Game(Team1,Team2):
                         print('{} {} - {} {}     {} min'.format(notactiveteam.Team.Name, notactiveteam.Goals,activeteam.Goals, activeteam.Team.Name, time))
                 if time == 45 or time == 90:
                         additionaltime = rand(0, 5)
+                chance = rand(0,100)
+                if chance <=20:
+                        player = rand(1, 10)
+                        activeplayer = notactiveteam.Team.StartPlayers[player]
+                        while activeplayer.RedCard==1:
+                                player=rand(1, 10)
+                                activeplayer = notactiveteam.Team.StartPlayers[player]
+                        print("foul by {} {}".format(activeplayer.Surname,activeplayer.Club))
+                        if rand(0,150)==75:
+                                print('###########RED CARD! to {} {}##########'.format(activeplayer.Surname,activeplayer.Club))
+                                notactiveteam.addRed(player)
+                        elif rand(0,100)<=10:
+                                print('#########Yellow Card to {} {}##############'.format(activeplayer.Surname,activeplayer.Club))
+                                notactiveteam.addYellow(player)
                 if attackpointer<4:
                         chance = rand(0,100)
                         activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders,10)]
+                        while activeplayer.RedCard == 1:
+                                activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders, 10)]
                         if chance<activeplayer.Rating:
                                 print('secsessful pass by {} {}'.format(activeplayer.Surname,activeplayer.Club))
                                 attackpointer+=1
@@ -68,6 +95,8 @@ def Game(Team1,Team2):
                         if chance<=50:
                                 chance = rand(0, 100)
                                 activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders, 10)]
+                                while activeplayer.RedCard == 1:
+                                        activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders, 10)]
                                 if chance < activeplayer.Rating:
                                         print('secsessful pass by {} {}'.format(activeplayer.Surname,activeplayer.Club))
                                         attackpointer += 1
@@ -80,8 +109,12 @@ def Game(Team1,Team2):
                                 chance = rand(0,100)
                                 if chance <30:
                                         activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders,10-activeteam.Team.Strikers)]
+                                        while activeplayer.RedCard == 1:
+                                                activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders, 10 - activeteam.Team.Strikers)]
                                 else:
                                         activeplayer = activeteam.Team.StartPlayers[rand(10 - activeteam.Team.Strikers,10)]
+                                        while activeplayer.RedCard == 1:
+                                                activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders, 10 - activeteam.Team.Strikers)]
                                 chance=rand(0,100)
                                 if chance<=activeplayer.Rating/2:
                                         activeteam.addShoot()
