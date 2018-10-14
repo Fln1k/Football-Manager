@@ -5,6 +5,8 @@ from MatchClass import Game
 from PlayerClass import PoolPlayers
 from CoachClass import Coach
 
+def PointsKey(Team):
+    return Team.Points
 
 def LoadPlayers(Players):
     counter = 0
@@ -45,3 +47,7 @@ def LoadLeagues(Leagues):
 Leagues = []
 LoadLeagues(Leagues)
 Game(Leagues[0].Teams[0], Leagues[0].Teams[1])
+Leagues[0].Positions=sorted(Leagues[0].Teams,key=PointsKey,reverse=True)
+print("Name     Games Win Draw Lose Points")
+for Team in Leagues[0].Positions:
+    print('{}   {}    {}    {}    {}  {}PT'.format(Team.Name,Team.Games,Team.WinGames,Team.DrawGames,Team.LoseGames,Team.Points))

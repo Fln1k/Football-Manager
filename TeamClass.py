@@ -1,7 +1,5 @@
 def findmin(amount):
     min = 101
-    minindex=0
-    counter = 0
     for counter in amount:
         if  min>counter:
              min=counter
@@ -102,6 +100,11 @@ class Team:
     _Defenders=0
     _Middefenders=0
     _Strikers=0
+    Points=0
+    WinGames=0
+    LoseGames=0
+    DrawGames=0
+    Games=0
     def __init__(self,Name,Color,Money,Coach,Tactic,TeamPlayers):
         self.Name=Name
         self.Color=Color
