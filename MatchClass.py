@@ -2,6 +2,7 @@ from random import randint as rand
 from time import sleep
 
 class MatchTeam:
+        Substitution=0
         Team=0
         AllPass = 0
         SecsessfulPass = 0
@@ -14,6 +15,7 @@ class MatchTeam:
         RedCards=0
         def __init__(self,Team):
                 self.Team=Team
+                self.Substitution=2
         def addGoal(self):
                 self.AllShoots+=1
                 self.SecsessfulShoots+=1
@@ -77,6 +79,25 @@ def Game(Team1,Team2):
                         elif rand(0,100)<=10:
                                 print('#########Yellow Card to {} {}##############'.format(activeplayer.Surname,activeplayer.Club))
                                 notactiveteam.addYellow(player)
+                        if rand(0,200)<=2:
+                                activeplayer=activeteam.Team.StartPlayers[rand(1,10)]
+                                print('{} {} is injured'.format(activeplayer.Surname,activeplayer.Club))
+                                for Player in activeteam.Team.ReservePlayers:
+                                        if Player.Position==activeplayer.Position and Player.IsSubstitution==0:
+                                                Player.IsSubstitution=1
+                                                Player,activeplayer=activeplayer,Player
+                                                activeteam.Substitution-=1
+                                                print('@@@@@@@Substitution {} {} -> {} {}@@@@@@@@'.format(activeplayer.Surname,activeplayer.Club,Player.Surname,Player.Club))
+                                                break
+                if ((time>=60 and rand(0,100)<=5) or rand(0,200<=4)) and activeteam.Substitution==0:
+                        activeplayer = activeteam.Team.StartPlayers[rand(1, 10)]
+                        for Player in activeteam.Team.ReservePlayers:
+                                if Player.Position == activeplayer.Position:
+                                        Player.IsSubstitution = 1
+                                        Player, activeplayer = activeplayer, Player
+                                        activeteam.Substitution -= 1
+                                        print('@@@@@@@Substitution {} {} -> {} {}@@@@@@@@'.format(activeplayer.Surname,activeplayer.Club, Player.Surname,Player.Club))
+                                        break
                 if attackpointer<4:
                         chance = rand(0,100)
                         activeplayer = activeteam.Team.StartPlayers[rand(activeteam.Team.Defenders,10)]
