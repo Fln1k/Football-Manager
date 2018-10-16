@@ -90,7 +90,8 @@ def FillReserve(AllPlayers,StartPlayers):
 
 class Team:
     _Name=''
-    _Color=''
+    _Teg=''
+    _Color=[]
     _Points=0
     _Coach=0
     _Tactic=0
@@ -105,8 +106,9 @@ class Team:
     LoseGames=0
     DrawGames=0
     Games=0
-    def __init__(self,Name,Color,Money,Coach,Tactic,TeamPlayers):
+    def __init__(self,Name,Teg,Color,Money,Coach,Tactic,TeamPlayers):
         self.Name=Name
+        self.Teg=Teg
         self.Color=Color
         self.Money=Money
         self.Coach=Coach
