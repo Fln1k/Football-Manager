@@ -1,6 +1,24 @@
 from random import randint as rand
 from time import sleep
 
+def findminratingplayer(amount):
+    min = 101
+    minindex=0
+    for counter in amount:
+        if  min>counter.Rating:
+                min=counter.Rating
+                minindex=counter
+    return amount.index(minindex)
+
+def findmaxratingplayer(amount):
+    max = 0
+    maxindex=0
+    for counter in amount:
+        if max<counter.Rating:
+                max=counter.Rating
+                maxindex=counter
+    return amount.index(maxindex)
+
 class MatchTeam:
         Substitution=0
         Team=0
@@ -52,6 +70,25 @@ def Game(Team1,Team2):
         additionaltime=90
         attackpointer=0
         while timer<=180:
+                if activeteam.Goals<notactiveteam.Goals and rand(0,200)<100 and activeteam.Team.Tactic!=activeteam.Team.Tactic1 and timer>100:
+                        if activeteam.Substitution>0:
+                                if int(int(activeteam.Team.Tactic / 10) % 10) == 4 and int(int(activeteam.Team.Tactic1 / 10) % 10) == 3:
+                                        Middefenders=[]
+                                        for counter in activeteam.Team.StartPlayers:
+                                                if counter.Position=='MD':
+                                                        Middefenders.append(counter)
+                                        Strikers=[]
+                                        for counter in activeteam.Team.ReservePlayers:
+                                                if counter.Position == 'ST':
+                                                        Strikers.append(counter)
+                                        f=int(int(activeteam.Team.Tactic/10)%10)+findminratingplayer(Middefenders)
+                                        while f<int(int(int(activeteam.Team.Tactic/10)/10)%10)+int(int(activeteam.Team.Tactic/10)%10):
+                                                activeteam.Team.StartPlayers[f],activeteam.Team.StartPlayers[f+1]=activeteam.Team.StartPlayers[f+1],activeteam.Team.StartPlayers[f]
+                                                f+=1
+                                        ff=activeteam.Team.StartPlayers[f]
+                                        activeteam.Team.StartPlayers[8]=activeteam.Team.ReservePlayers[6-findmaxratingplayer(Strikers)]
+                                        fff=activeteam.Team.StartPlayers[f]
+                        activeteam.Team.Tactic = activeteam.Team.Tactic1
                 time=int(timer/2)
                 activeteam.addProssession()
                 if time == 45 or time == 90:
@@ -67,7 +104,7 @@ def Game(Team1,Team2):
                                 notactiveteam.addRed(player)
                         elif rand(0,100)<=10:
                                 notactiveteam.addYellow(player)
-                        if rand(0,200)<=2:
+                        if rand(0,200)<=2 and activeteam.Substitution>0:
                                 activeplayer=activeteam.Team.StartPlayers[rand(1,10)]
                                 for Player in activeteam.Team.ReservePlayers:
                                         if Player.Position==activeplayer.Position and Player.IsSubstitution==0:
@@ -75,7 +112,7 @@ def Game(Team1,Team2):
                                                 Player,activeplayer=activeplayer,Player
                                                 activeteam.Substitution-=1
                                                 break
-                if ((time>=60 and rand(0,100)<=5) or rand(0,200<=4)) and activeteam.Substitution==0:
+                if ((time>=60 and rand(0,100)<=5) or rand(0,200<=4)) and activeteam.Substitution>0:
                         activeplayer = activeteam.Team.StartPlayers[rand(1, 10)]
                         for Player in activeteam.Team.ReservePlayers:
                                 if Player.Position == activeplayer.Position:
@@ -126,6 +163,8 @@ def Game(Team1,Team2):
                                         attackpointer=0
                                 elif rand(0,activeplayer.Shoot)>notactiveteam.Team.StartPlayers[0].Rating/2:
                                         activeteam.addGoal()
+                                        activeteam.Team.GoalsScore+=1
+                                        notactiveteam.Team.GoalsLose+=1
                                         activeteam, notactiveteam = notactiveteam, activeteam
                                         attackpointer=0
 
@@ -161,6 +200,7 @@ def Game(Team1,Team2):
                 activeteam.Team.DrawGames+=1
                 notactiveteam.Team.DrawGames+=1
                 notactiveteam.Team.Points+=1
+        print('--------------\n1){}\n2){}\n----------'.format(activeteam.Substitution,notactiveteam.Substitution))
         activeteam.Team.Games+=1
         notactiveteam.Team.Games += 1
 
