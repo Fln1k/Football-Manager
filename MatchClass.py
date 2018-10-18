@@ -81,13 +81,11 @@ def Game(Team1,Team2):
                                         for counter in activeteam.Team.ReservePlayers:
                                                 if counter.Position == 'ST':
                                                         Strikers.append(counter)
-                                        f=int(int(activeteam.Team.Tactic/10)%10)+findminratingplayer(Middefenders)
-                                        while f<int(int(int(activeteam.Team.Tactic/10)/10)%10)+int(int(activeteam.Team.Tactic/10)%10):
+                                        counter=int(int(activeteam.Team.Tactic/10)%10)+findminratingplayer(Middefenders)
+                                        while counter<int(int(int(activeteam.Team.Tactic/10)/10)%10)+int(int(activeteam.Team.Tactic/10)%10):
                                                 activeteam.Team.StartPlayers[f],activeteam.Team.StartPlayers[f+1]=activeteam.Team.StartPlayers[f+1],activeteam.Team.StartPlayers[f]
-                                                f+=1
-                                        ff=activeteam.Team.StartPlayers[f]
+                                                counter+=1
                                         activeteam.Team.StartPlayers[8]=activeteam.Team.ReservePlayers[6-findmaxratingplayer(Strikers)]
-                                        fff=activeteam.Team.StartPlayers[f]
                         activeteam.Team.Tactic = activeteam.Team.Tactic1
                 time=int(timer/2)
                 activeteam.addProssession()
@@ -200,7 +198,6 @@ def Game(Team1,Team2):
                 activeteam.Team.DrawGames+=1
                 notactiveteam.Team.DrawGames+=1
                 notactiveteam.Team.Points+=1
-        print('--------------\n1){}\n2){}\n----------'.format(activeteam.Substitution,notactiveteam.Substitution))
         activeteam.Team.Games+=1
         notactiveteam.Team.Games += 1
 
