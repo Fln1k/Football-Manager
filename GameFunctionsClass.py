@@ -1,10 +1,6 @@
 from PlayerClass import Player
 from TeamClass import Team
 from LeagueClass import League
-from MatchClass import Game
-from PlayerClass import PoolPlayers
-from CoachClass import Coach
-from CoachClass import CoachPool
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
@@ -19,16 +15,14 @@ class AllFunctions:
     _ManagersPool=0
     _Leagues=[]
     _timer=0
-    
+
     def __init__(self):
         self.PlayersPool=self.LoadPlayers()
         self.ManagersPool=self.LoadManagers()
         self.Leagues=self.LoadLeagues()
-
-        
+       
     def PointsKey(self,Team):
         return Team.Points
-
 
     def findminratingplayer(self,amount):
         min = 101
@@ -38,7 +32,6 @@ class AllFunctions:
                 min = counter.Rating
                 minindex = counter
         return amount.index(minindex)
-
 
     def findmaxratingplayer(self,amount):
         max = 0
@@ -64,7 +57,7 @@ class AllFunctions:
             Pool = PoolPlayers(Players)
             return Pool
 
-
+r
     def LoadManagers(self):
         Managers=[]
         counter = 0
@@ -80,20 +73,20 @@ class AllFunctions:
             return Pool
 
 
+
     def LoadTeams(self):
          Teams = []
          Teams.append(Team('Chelsea','CHE',[0,0,1,1],70000000,self.ManagersPool.RequestCoach('Chelsea'), self.PlayersPool.Request('Chelsea')))
          Teams.append(Team('Arsenal','ARS',[1,0,0,1], 50000000,self.ManagersPool.RequestCoach('Arsenal'), self.PlayersPool.Request('Arsenal')))
          return Teams
 
-        
+      
     def LoadLeagues(self):
         Leagues=[]
         Teams=self.LoadTeams()
         EPL = League('EPL', Teams)
         Leagues.append(EPL)
         return Leagues
-
 
     def MatchSimulation(self):
         MatchTeam1=MatchTeam(self.Leagues[0].Teams[0])
@@ -234,5 +227,6 @@ class AllFunctions:
                 notactiveteam.Team.Points += 1
             activeteam.Team.Games += 1
             notactiveteam.Team.Games += 1
-    FootballManager=AllFunctions
-    FootballManager.start_timer(FootballManager)
+
+    def start_timer(self):
+        Clock.schedule_interval(self.MatchSimulation,1)
