@@ -1,22 +1,26 @@
 from PlayerClass import Player
 from TeamClass import Team
 from LeagueClass import League
-from PlayerClass import PoolPlayers
-from CoachClass import Coach
-from CoachClass import CoachPool
+from kivy.uix.image import Image
+from kivy.uix.widget import Widget
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 from random import randint as rand
 from kivy.clock import Clock
 from MatchClass import MatchTeam
+
 
 class AllFunctions:
     _PlayersPool=0
     _ManagersPool=0
     _Leagues=[]
     _timer=0
+
     def __init__(self):
         self.PlayersPool=self.LoadPlayers()
         self.ManagersPool=self.LoadManagers()
         self.Leagues=self.LoadLeagues()
+       
     def PointsKey(self,Team):
         return Team.Points
 
@@ -38,6 +42,7 @@ class AllFunctions:
                 maxindex = counter
         return amount.index(maxindex)
 
+
     def LoadPlayers(self):
         Players=[]
         counter = 0
@@ -52,6 +57,7 @@ class AllFunctions:
             Pool = PoolPlayers(Players)
             return Pool
 
+r
     def LoadManagers(self):
         Managers=[]
         counter = 0
@@ -66,12 +72,15 @@ class AllFunctions:
             Pool = CoachPool(Managers)
             return Pool
 
-    def LoadTeams(self):
-        Teams = []
-        Teams.append(Team('Chelsea', 'Blue', 70000000,self.ManagersPool.RequestCoach('Chelsea'), self.PlayersPool.Request('Chelsea')))
-        Teams.append(Team('Arsenal', 'Red', 50000000,self.ManagersPool.RequestCoach('Arsenal'), self.PlayersPool.Request('Arsenal')))
-        return Teams
 
+
+    def LoadTeams(self):
+         Teams = []
+         Teams.append(Team('Chelsea','CHE',[0,0,1,1],70000000,self.ManagersPool.RequestCoach('Chelsea'), self.PlayersPool.Request('Chelsea')))
+         Teams.append(Team('Arsenal','ARS',[1,0,0,1], 50000000,self.ManagersPool.RequestCoach('Arsenal'), self.PlayersPool.Request('Arsenal')))
+         return Teams
+
+      
     def LoadLeagues(self):
         Leagues=[]
         Teams=self.LoadTeams()
@@ -221,6 +230,3 @@ class AllFunctions:
 
     def start_timer(self):
         Clock.schedule_interval(self.MatchSimulation,1)
-
-FootballManager=AllFunctions
-FootballManager.start_timer(FootballManager)
