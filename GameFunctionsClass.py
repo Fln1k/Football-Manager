@@ -57,7 +57,6 @@ class AllFunctions:
             Pool = PoolPlayers(Players)
             return Pool
 
-r
     def LoadManagers(self):
         Managers=[]
         counter = 0
