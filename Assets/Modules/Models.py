@@ -225,14 +225,15 @@ class AllFunctions:
                     active = 'Save by:'
                     activeteam, notactiveteam = notactiveteam, activeteam
                     attackpointer = 0
-        activeteam.Prossession = int(
-            activeteam.Prossession / (activeteam.Prossession + notactiveteam.Prossession) * 100)
-        notactiveteam.Prossession = 100 - activeteam.Prossession
-        activeteam.AllPass *= 2
-        activeteam.SecsessfulPass *= 2
-        notactiveteam.AllPass *= 2
-        notactiveteam.SecsessfulPass *= 2
+        time += 1
         if time == 180:
+            activeteam.Prossession = int(
+                activeteam.Prossession / (activeteam.Prossession + notactiveteam.Prossession) * 100)
+            notactiveteam.Prossession = 100 - activeteam.Prossession
+            activeteam.AllPass *= 2
+            activeteam.SecsessfulPass *= 2
+            notactiveteam.AllPass *= 2
+            notactiveteam.SecsessfulPass *= 2
             if activeteam.Goals > notactiveteam.Goals:
                 activeteam.Team.Points += 3
                 activeteam.Team.WinGames += 1
@@ -248,7 +249,6 @@ class AllFunctions:
                 notactiveteam.Team.Points += 1
                 activeteam.Team.Games += 1
                 notactiveteam.Team.Games += 1
-        time += 1
         return [activeteam, notactiveteam, playerteam, time,attackpointer]
 
 
@@ -300,8 +300,10 @@ class table:
         self.table = teams
 
     def sort(self):
-        self.table = sorted(self.table, key=lambda k: k.Points)
+        self.table = sorted(self.table, key=lambda k: k.Points,reverse=True)
 
+    def update(self,teams):
+        self.table = teams
 
 def findmin(amount):
     min = 101

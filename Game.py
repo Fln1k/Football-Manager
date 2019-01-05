@@ -104,17 +104,28 @@ class Game:
                                             match_info = self.GameFunc.match_simulation(match_array[0],match_array[1],self.player_team,time,0)
                                             while time<180:
                                                 match_info = self.GameFunc.match_simulation(match_info[0],match_info[1],match_info[2],match_info[3],match_info[4])
-                                                time = match_info[4]
-                                            self.update_table()
+                                                time = match_info[3]
+                                            pointer = 0
+                                            while pointer<2:
+                                                for team in self.GameFunc.Leagues[0].Teams:
+                                                    if team.Name == match_info[pointer].Team.Name:
+                                                        team.GoalsScore = match_info[pointer].Goals
+                                                        if pointer - 1 == 0:
+                                                            team.GoalsLose = match_info[0].Goals
+                                                        else:
+                                                            team.GoalsLose = match_info[1].Goals
+                                                        team.Games+=1
+                                                pointer+=1
                                         else:
                                             playermatch = True
                                         counter+=2
                                     if playermatch:
                                         break
+                                    self.table.sort()
                                     skip(self.current_date)
-                                    self.game_menu()
                                     pygame.time.delay(1000)
                                     match_array = get_play_teams(self.current_date,self.DataPool,self.GameFunc)
+                                    self.game_menu()
                                 if playermatch:
                                     counter = 0
                                     while counter < len(match_array):
@@ -123,7 +134,7 @@ class Game:
                                             self.Match = True
                                         counter+=2
                                 if self.Match:
-                                    self.screen.blit(self.font.render("Match", True, self.font_color), (1010, 655))
+                                    pass
             pygame.display.update()
 
     def update_table(self):
@@ -206,7 +217,7 @@ class Game:
         self.screen.blit(pygame.image.load(self.ImageFolder).convert(), (0, 0))
         self.screen.blit(pygame.image.load("Assets/Images/"+self.player_team.Name+" Top.jpg").convert(), (0, 0))
         self.Manager.Club=self.player_team.Name
-        self.screen.blit(self.font.render(self.Manager.Name +" "+ self.Manager.Surname, True, self.font_color), (0, 30))
+        self.screen.blit(self.font.render(self.Manager.Name +" "+ self.Manager.Surname, True, self.font_color), (10, 45))
         self.font = pygame.font.Font(None, 30)
         self.screen.blit(self.font.render("Messages", True, self.font_color), (10, 150))
         self.screen.blit(self.font.render("Finances", True, self.font_color), (10, 200))
@@ -249,12 +260,15 @@ class Game:
         self.font = pygame.font.Font(None, 50)
         self.screen.blit(self.font.render(
             str(self.current_date[0]) + "." + str(self.current_date[1]) + "." + str(self.current_date[2]), True,
-            self.font_color), (1100, 30))
+            self.font_color), (1100, 45))
         self.font = pygame.font.Font(None, 64)
         self.kind = "WAIT"
         if not self.Match:
             self.screen.blit(self.font.render("Continue", True, self.font_color),
                              (1010, 655))
+        else:
+            self.screen.blit(self.font.render("Match", True, self.font_color), (1010, 655))
+            self.kind ="Wait for start match"
         pygame.display.update()
 
     def match(self):
