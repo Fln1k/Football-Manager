@@ -1,4 +1,5 @@
 from Assets.Modules.Models import *
+from moviepy.editor import *
 
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
     DataPool = None
     Match = False
     table = None
+    clip = VideoFileClip("Assets/Videos/MatchDay.mpg")
 
     def __init__(self):
         pygame.init()
@@ -32,7 +34,7 @@ class Game:
     def run(self):
         self.kind = "MainMenu"
         while True:
-            pygame.time.delay(100)
+            pygame.time.delay(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -101,40 +103,60 @@ class Game:
                                         if match_array[counter].Name != self.player_team.Name\
                                                 and match_array[counter+1].Name != self.player_team.Name:
                                             time = 0
-                                            match_info = self.GameFunc.match_simulation(match_array[0],match_array[1],self.player_team,time,0)
+                                            match_info = self.GameFunc.match_simulation(match_array[0],match_array[1],
+                                                                                        self.player_team,time,0)
                                             while time<180:
-                                                match_info = self.GameFunc.match_simulation(match_info[0],match_info[1],match_info[2],match_info[3],match_info[4])
+                                                match_info = self.GameFunc.match_simulation(match_info[0],match_info[1],
+                                                                                            match_info[2],match_info[3],
+                                                                                            match_info[4])
                                                 time = match_info[3]
                                             pointer = 0
                                             while pointer<2:
                                                 for team in self.GameFunc.Leagues[0].Teams:
                                                     if team.Name == match_info[pointer].Team.Name:
-                                                        team.GoalsScore = match_info[pointer].Goals
+                                                        team.GoalsScore += match_info[pointer].Goals
                                                         if pointer - 1 == 0:
-                                                            team.GoalsLose = match_info[0].Goals
+                                                            team.GoalsLose += match_info[0].Goals
                                                         else:
-                                                            team.GoalsLose = match_info[1].Goals
+                                                            team.GoalsLose += match_info[1].Goals
                                                         team.Games+=1
-                                                pointer+=1
+                                                pointer +=1
                                         else:
                                             playermatch = True
                                         counter+=2
-                                    if playermatch:
-                                        break
+                                    if not playermatch:
+                                        skip(self.current_date)
                                     self.table.sort()
-                                    skip(self.current_date)
                                     pygame.time.delay(1000)
                                     match_array = get_play_teams(self.current_date,self.DataPool,self.GameFunc)
+                                    if playermatch:
+                                        self.Match = True
+                                        self.kind = ""
+                                        self.clip.preview()
+                                        pygame.time.delay(1000)
                                     self.game_menu()
-                                if playermatch:
-                                    counter = 0
-                                    while counter < len(match_array):
-                                        if (match_array[counter].Name == self.player_team.Name
-                                                or match_array[counter + 1].Name == self.player_team.Name):
-                                            self.Match = True
-                                        counter+=2
-                                if self.Match:
-                                    pass
+                        elif self.Match:
+                            if event.pos[0] >= 1010 and event.pos[1] >= 655:
+                                counter = 0
+                                while counter<len(match_array):
+                                    if match_array[counter].Name == self.player_team.Name or\
+                                            match_array[counter+1].Name == self.player_team.Name:
+                                        time = 0
+                                        match_info = self.GameFunc.match_simulation(match_array[counter],
+                                                                                    match_array[counter+1],
+                                                                                    self.player_team, time, 0)
+                                        self.match(match_array[counter].Name,match_array[counter+1].Name,match_info[0], match_info[1], time)
+                                        while time < 180:
+                                            match_info = self.GameFunc.match_simulation(match_info[0], match_info[1],
+                                                                                        match_info[2], match_info[3],
+                                                                                        match_info[4])
+                                            time = match_info[3]
+                                            self.match(match_array[counter].Name, match_array[counter + 1].Name, match_info[0],
+                                                       match_info[1], time)
+                                            pygame.time.delay(1000)
+                                        break
+                                    counter+=2
+
             pygame.display.update()
 
     def update_table(self):
@@ -271,8 +293,27 @@ class Game:
             self.kind ="Wait for start match"
         pygame.display.update()
 
-    def match(self):
-        pass
+    def match(self,team_1_name,team_2_name,team1,team2,time):
+        self.screen.blit(pygame.image.load(self.ImageFolder).convert(), (0, 0))
+        self.screen.blit(pygame.image.load("Assets/Images/GameField.jpg").convert(), (180, 100))
+        team1_logo = pygame.image.load("Assets/Images/" + team_1_name + " Logo.png").convert()
+        team2_logo = pygame.image.load("Assets/Images/" + team_2_name + " Logo.png").convert()
+        team1_logo.set_colorkey((0, 0, 0))
+        team2_logo.set_colorkey((0, 0, 0))
+        self.screen.blit(team1_logo, (580, 0))
+        self.screen.blit(team2_logo, (780, 0))
+        self.font = pygame.font.Font(None, 64)
+        if team1.Team.Name == team_1_name:
+            self.screen.blit(self.font.render(str(team1.Goals) + " - " + str(team2.Goals), True, self.font_color),
+                             (690, 20))
+        else:
+            self.screen.blit(self.font.render(str(team2.Goals) + " - " + str(team1.Goals), True, self.font_color),
+                             (690, 20))
+        if time < 10:
+            self.screen.blit(self.font.render("0" + str(time) + ":00", True, self.font_color),(20, 20))
+        else:
+            self.screen.blit(self.font.render(str(time) + ":00", True, self.font_color), (20, 20))
+        pygame.display.update()
 
 game = Game()
 game.run()
